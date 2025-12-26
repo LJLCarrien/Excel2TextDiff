@@ -1,4 +1,4 @@
-﻿using CommandLine;
+using CommandLine;
 using CommandLine.Text;
 using System;
 using System.Collections.Generic;
@@ -15,10 +15,10 @@ namespace Excel2TextDiff
         [Option('d', SetName = "diff", HelpText = "transform and diff file")]
         public bool IsDiff { get; set; }
 
-        [Option('p', SetName = "diff", Required = false, HelpText = "3rd diff program. default TortoiseMerge")]
+        [Option('p', SetName = "diff", Required = false, HelpText = "3rd diff program. default TortoiseGitMerge")]
         public string DiffProgram { get; set; }
 
-        [Option('f', SetName = "diff", Required = false, HelpText = "3rd diff program argument format. default is TortoiseMerge format:'/base:{0} /mine:{1}'")]
+        [Option('f', SetName = "diff", Required = false, HelpText = "3rd diff program argument format. default is TortoiseGitMerge format:'/base:{0} /mine:{1}'")]
         public string DiffProgramArgumentFormat { get; set; }
 
         [Value(0)]
@@ -29,7 +29,7 @@ namespace Excel2TextDiff
         {
             new Example("tranfrom to text", new CommandLineOptions { IsTransform = true, Files = new List<string>{"a.xlsx", "a.txt" } }),
             new Example("diff two excel file", new CommandLineOptions{ IsDiff = true, Files = new List<string>{"a.xlsx", "b.xlsx"}}),
-            new Example("diff two excel file with TortoiseMerge", new CommandLineOptions{ IsDiff = true, DiffProgram = "TortoiseMerge",DiffProgramArgumentFormat = "/base:{0} /mine:{1}",  Files = new List<string>{"a.xlsx", "b.xlsx"}}),
+            new Example("diff two excel file with TortoiseGitMerge", new CommandLineOptions{ IsDiff = true, DiffProgram = "TortoiseGitMerge",DiffProgramArgumentFormat = "/base:{0} /mine:{1}",  Files = new List<string>{"a.xlsx", "b.xlsx"}}),
         };
     }
 
@@ -60,7 +60,7 @@ namespace Excel2TextDiff
                     Environment.Exit(1);
                 }
 
-                var diffProgame = options.DiffProgram ?? "TortoiseMerge.exe";
+                var diffProgame = options.DiffProgram ?? "TortoiseGitMerge.exe";
 
                 var tempTxt1 = Path.GetTempFileName();
                 writer.TransformToTextAndSave(options.Files[0], tempTxt1);
@@ -72,6 +72,8 @@ namespace Excel2TextDiff
                 startInfo.FileName = diffProgame;
                 string argsFormation = options.DiffProgramArgumentFormat ?? "/base:{0} /mine:{1}";
                 startInfo.Arguments = string.Format(argsFormation, tempTxt1, tempTxt2);
+                //Console.WriteLine(tempTxt1);
+                //Console.WriteLine(tempTxt2);
                 Process.Start(startInfo);
             }
         }
